@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMA eBooks - Ang Malayang Agila</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="description" content="AMA eBooks - Digital Library of The Fraternal Order of Eagles">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1a1a2e;
+            --secondary-color: #16213e;
+            --accent-color: #FFD700;
+            --accent-orange: #FFA500;
+            --text-light: #ffffff;
+            --text-muted: #a0a0a0;
+            --card-bg: #2d2d44;
+            --hover-bg: #3d3d54;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .bg-animation span {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* Header */
+        header {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 10px var(--accent-color);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 20px var(--accent-color);
+            }
+        }
+
+        .title-section h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, var(--accent-color), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
+
+        .title-section p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--accent-color), var(--accent-orange));
+            color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Search Bar */
+        .search-section {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-bar input {
+            flex: 1;
+            min-width: 250px;
+            padding: 1rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 15px;
+            background: var(--secondary-color);
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.7rem 1.2rem;
+            background: var(--secondary-color);
+            color: var(--text-light);
+            border: 2px solid var(--accent-color);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--accent-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Books Grid */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .book-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .book-card:nth-child(1) { animation-delay: 0.1s; }
+        .book-card:nth-child(2) { animation-delay: 0.2s; }
+        .book-card:nth-child(3) { animation-delay: 0.3s; }
+        .book-card:nth-child(4) { animation-delay: 0.4s; }
+        .book-card:nth-child(5) { animation-delay: 0.5s; }
+        .book-card:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .book-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(255, 215, 0, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .book-card:hover::before {
+            opacity: 1;
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--secondary-color), var(--card-bg));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .book-cover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .book-card:hover .book-cover::after {
+            left: 100%;
+        }
+
+        .book-info {
+            padding: 1.5rem;
+        }
+
+        .book-category {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: var(--accent-color);
+            color: var(--primary-color);
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+            color: var(--accent-color);
+        }
+
+        .book-author {
+            color: var(--text-muted);
+            margin-bottom: 0.8rem;
+        }
+
+        .book-description {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .book-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            max-width: 900px;
+            margin: 2rem auto;
+            border-radius: 20px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.4s;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 2rem;
+            border-bottom: 2px solid var(--accent-color);
+            position: sticky;
+            top: 0;
+            background: var(--card-bg);
+            z-index: 10;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--accent-color);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            background: var(--accent-color);
+            color: var(--primary-color);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .reader-content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 15px;
+            background: var(--secondary-color);
+            color: var(--text-light);
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--secondary-color);
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-state-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-color);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 4rem;
+            border-top: 2px solid var(--accent-color);
+        }
+
+        .developer-credit {
+            color: var(--text-muted);
+            margin-top: 1rem;
+        }
+
+        .developer-credit a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .title-section h1 {
+                font-size: 1.4rem;
+            }
+
+            .books-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                max-height: 95vh;
+            }
+        }
+
+        /* Install Button */
+        .install-banner {
+            background: linear-gradient(45deg, var(--accent-color), var(--accent-orange));
+            color: var(--primary-color);
+            padding: 1rem 2rem;
+            text-align: center;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            animation: slideUpBanner 0.5s;
+        }
+
+        @keyframes slideUpBanner {
+            from {
+                bottom: -100px;
+            }
+            to {
+                bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splashScreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s;">
+        <img src="/mnt/user-data/uploads/AMA_Logo-_-_Copy.png" alt="AMA Logo" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--accent-color); animation: logoSpin 2s ease-in-out infinite;">
+        <h1 style="margin-top: 2rem; font-size: 2rem; background: linear-gradient(45deg, var(--accent-color), var(--accent-orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">AMA eBooks</h1>
+        <p style="color: var(--text-muted); margin-top: 0.5rem; font-style: italic;">Ang Malayang Agila</p>
+        <div class="spinner" style="margin-top: 2rem;"></div>
+    </div>
+
+    <style>
+        @keyframes logoSpin {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(360deg) scale(1.1); }
+        }
+    </style>
+
+    <!-- Background Animation -->
+    <div class="bg-animation" id="bgAnimation"></div>
+
+    <!-- Install Banner -->
+    <div class="install-banner" id="installBanner">
+        <span>📱 Install AMA eBooks sa inyong device!</span>
+        <button class="btn btn-secondary" id="installBtn">Install Now</button>
+        <button class="btn btn-secondary" id="dismissInstall">✕</button>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="/mnt/user-data/uploads/AMA_Logo-_-_Copy.png" alt="AMA Logo" class="logo" id="logoImg">
+                <div class="title-section">
+                    <h1>AMA eBooks</h1>
+                    <p>Ang Malayang Agila Digital Library</p>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn btn-primary" onclick="showSection('library')">📚 Library</button>
+                <button class="btn btn-secondary" onclick="showSection('admin')" id="adminBtn">⚙️ Admin</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Library Section -->
+        <div id="librarySection">
+            <!-- Search Section -->
+            <div class="search-section">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="🔍 Search books, stories, articles...">
+                </div>
+                <div class="filter-buttons" style="margin-top: 1rem;">
+                    <button class="filter-btn active" data-category="all">All</button>
+                    <button class="filter-btn" data-category="Magna Carta">Magna Carta</button>
+                    <button class="filter-btn" data-category="History">History</button>
+                    <button class="filter-btn" data-category="Stories">Stories</button>
+                    <button class="filter-btn" data-category="Articles">Articles</button>
+                    <button class="filter-btn" data-category="Documents">Documents</button>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Loading books...</p>
+            </div>
+
+            <!-- Books Grid -->
+            <div class="books-grid" id="booksGrid"></div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-state-icon">📚</div>
+                <h2>Walay nakita nga books</h2>
+                <p>Try using different search terms or categories</p>
+            </div>
+        </div>
+
+        <!-- Admin Section -->
+        <div id="adminSection" style="display: none;">
+            <div class="admin-panel">
+                <h2 style="margin-bottom: 2rem; color: var(--accent-color);">📝 Manage eBooks</h2>
+                
+                <form id="bookForm">
+                    <input type="hidden" id="bookId">
+                    
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="bookTitle" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Author</label>
+                        <input type="text" id="bookAuthor" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="bookCategory" required>
+                            <option value="Magna Carta">Magna Carta</option>
+                            <option value="History">History</option>
+                            <option value="Stories">Stories</option>
+                            <option value="Articles">Articles</option>
+                            <option value="Documents">Documents</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Cover Image</label>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <input type="url" id="bookCover" placeholder="Image URL (https://...)" style="flex: 1; min-width: 250px;">
+                            <label for="imageUpload" class="btn btn-secondary" style="cursor: pointer; margin: 0;">
+                                📁 Upload Image
+                            </label>
+                            <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                        </div>
+                        <div id="imagePreview" style="margin-top: 1rem; display: none;">
+                            <img id="previewImg" style="max-width: 200px; border-radius: 10px; border: 2px solid var(--accent-color);">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="bookDescription" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Content</label>
+                        <textarea id="bookContent" required></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">💾 Save Book</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">🔄 Reset</button>
+                    </div>
+                </form>
+
+                <hr style="margin: 3rem 0; border-color: var(--accent-color);">
+
+                <h3 style="margin-bottom: 1rem; color: var(--accent-color);">📖 Existing Books</h3>
+                <div id="adminBooksList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reader Modal -->
+    <div class="modal" id="readerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close-modal" onclick="closeModal()">×</span>
+                <div class="book-category" id="modalCategory"></div>
+                <h2 id="modalTitle"></h2>
+                <p id="modalAuthor" style="color: var(--text-muted);"></p>
+            </div>
+            <div class="modal-body">
+                <div class="reader-content" id="modalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 AMA eBooks - The Fraternal Order of Eagles</p>
+        <p style="margin-top: 0.5rem; font-style: italic;">"Ang Malayang Agila - Humanitarian Service - Deo Et Patria"</p>
+        <div class="developer-credit">
+            Developed by <a href="#" target="_blank">Godmisoft</a> | Heber Mayormita
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

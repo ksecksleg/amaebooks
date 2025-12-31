@@ -1,0 +1,22 @@
+{
+  "name": "ama-ebooks",
+  "version": "1.0.0",
+  "description": "AMA eBooks - Ang Malayang Agila Digital Library",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "serve": "python -m http.server 8000"
+  },
+  "keywords": [
+    "ebook",
+    "pwa",
+    "eagles",
+    "library"
+  ],
+  "author": "Godmisoft - Heber Mayormita",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
